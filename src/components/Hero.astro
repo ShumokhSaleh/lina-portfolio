@@ -1,0 +1,109 @@
+---
+import { pick } from '../lib/sanity.js';
+
+const { lang = 'ar', about = {} } = Astro.props;
+const isAr = lang === 'ar';
+
+const name = pick(about, 'name', lang) || (isAr ? 'لينا العالي' : 'Lina Al-Aali');
+const tagline = pick(about, 'tagline', lang);
+const tags = about.tags ?? [];
+const nameWords = name.split(' ');
+
+const ctaLabel = isAr ? 'استكشفي الأعمال' : 'Explore the Works';
+
+// نطلب نسخة مصغّرة من الصورة من Sanity عشان تحمل بسرعة
+const portrait = about.portraitUrl ? `${about.portraitUrl}?w=900&auto=format` : null;
+---
+
+<section class="relative overflow-hidden">
+	<!-- الدوائر الزخرفية في الخلفية -->
+	<div
+		aria-hidden="true"
+		class="pointer-events-none absolute -top-10 -start-72 size-[28rem] rounded-full bg-mist/60 md:top-12 md:-start-32 md:size-[42rem]"
+	>
+		<div class="absolute inset-[12%] rounded-full border border-teal/25"></div>
+	</div>
+
+	<div
+		class="relative mx-auto grid max-w-7xl gap-12 px-5 pt-8 pb-14 md:grid-cols-2 md:items-center md:gap-10 md:px-10 md:py-20"
+	>
+		<!-- النص -->
+		<div>
+			{
+				tags.length > 0 && (
+					<p class="mb-3 flex flex-wrap items-center gap-x-2 text-[0.7rem] font-medium tracking-wide text-teal md:text-xs">
+						{tags.map((tag, i) => (
+							<>
+								{i > 0 && <span class="size-1 rounded-full bg-teal" />}
+								<span>{tag}</span>
+							</>
+						))}
+					</p>
+				)
+			}
+
+			<h1 class="text-5xl leading-[1.1] font-semibold md:text-6xl lg:text-7xl">
+				{nameWords.map((word) => <span class="block">{word}</span>)}
+			</h1>
+
+			{
+				tagline && (
+					<p class="mt-5 max-w-md text-base leading-loose text-slate md:mt-6 md:text-lg">{tagline}</p>
+				)
+			}
+
+			<div class="mt-7 flex flex-wrap items-center gap-6 md:mt-8">
+				<a
+					href="#works"
+					class="bg-ink px-6 py-3 text-sm font-medium text-cream transition-opacity hover:opacity-90"
+				>
+					{ctaLabel}
+				</a>
+				{
+					about.instagram && (
+						<a
+							href={about.instagram}
+							target="_blank"
+							rel="noopener"
+							class="border-b border-ink pb-1 text-sm font-medium transition-colors hover:text-teal"
+						>
+							Instagram ↗
+						</a>
+					)
+				}
+			</div>
+		</div>
+
+		<!-- الصورة داخل قوس -->
+		<div class="flex justify-center md:justify-end">
+			<div class="relative w-[68%] max-w-xs lg:max-w-sm">
+				<!-- الخط الذهبي خلف الصورة -->
+				<div
+					aria-hidden="true"
+					class="absolute -top-4 -start-4 end-4 bottom-4 rounded-t-full rounded-b-lg border border-gold"
+				>
+				</div>
+
+				<div
+					class="relative aspect-[4/5] overflow-hidden rounded-t-full rounded-b-lg bg-gradient-to-b from-[#6f6f6f] to-[#d9d9d9] shadow-[0_30px_60px_-20px_rgba(11,31,46,0.35)]"
+				>
+					{
+						portrait ? (
+							<img src={portrait} alt={name} class="size-full object-cover" fetchpriority="high" />
+						) : (
+							<svg
+								viewBox="0 0 200 250"
+								class="absolute inset-x-0 bottom-0 w-full text-ink/60"
+								role="img"
+								aria-label={name}
+							>
+								<circle cx="100" cy="95" r="38" fill="currentColor" />
+								<path d="M20 250c0-55 36-95 80-95s80 40 80 95z" fill="currentColor" />
+							</svg>
+						)
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Hero from '../../components/Hero.astro';
+import { getAbout } from '../../lib/sanity.js';
+
+const about = await getAbout();
+---
+
+<Layout lang="en" title={about.name_en || 'Lina Al-Aali'}>
+	<Navbar lang="en" about={about} />
+	<main>
+		<Hero lang="en" about={about} />
+	</main>
+</Layout>

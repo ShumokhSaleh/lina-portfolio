@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/* ألوان الموقع الأساسية — تُستخدم هكذا: bg-cream, text-ink, border-gold ... */
+@theme {
+  --color-cream: #f4f1ea; /* الخلفية */
+  --color-ink: #0b1f2e; /* الكحلي الغامق: العناوين والأزرار */
+  --color-slate: #3d4a55; /* النصوص العادية */
+  --color-teal: #2b6f84; /* الوسوم الصغيرة */
+  --color-gold: #c9a35a; /* الخط الذهبي حول الصورة */
+  --color-mist: #e3e6df; /* الدوائر الزخرفية */
+  --color-line: #dcd8cf; /* الخطوط الفاصلة */
+
+  --font-ar: "El Messiri", system-ui, sans-serif;
+  --font-en: "Cormorant Garamond", Georgia, serif;
+}
+
+/* الخط يتغير تلقائيًا حسب لغة الصفحة */
+html:lang(ar) {
+  font-family: var(--font-ar);
+}
+html:lang(en) {
+  font-family: var(--font-en);
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
