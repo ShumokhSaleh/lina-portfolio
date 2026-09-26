@@ -1,0 +1,66 @@
+---
+import { pick } from '../lib/sanity.js';
+
+const { lang = 'ar', about = {} } = Astro.props;
+const isAr = lang === 'ar';
+
+const name = pick(about, 'name', lang) || (isAr ? 'لينا العالي' : 'Lina Al-Aali');
+const subtitle = isAr ? 'فنانة تشكيلية قطرية' : 'Qatari Visual Artist';
+
+const links = isAr
+	? [
+			{ label: 'الأعمال', href: '#works' },
+			{ label: 'عني', href: '#about' },
+			{ label: 'المسيرة', href: '#journey' },
+			{ label: 'تواصل', href: '#contact' },
+		]
+	: [
+			{ label: 'Works', href: '#works' },
+			{ label: 'About', href: '#about' },
+			{ label: 'Journey', href: '#journey' },
+			{ label: 'Contact', href: '#contact' },
+		];
+
+// زر تبديل اللغة يودّي للصفحة الثانية
+const switchHref = isAr ? '/en/' : '/';
+const switchLabel = isAr ? 'EN' : 'ع';
+---
+
+<header class="relative z-20 border-b border-line">
+	<nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-10 md:py-4">
+		<!-- الشعار والاسم -->
+		<a href={isAr ? '/' : '/en/'} class="flex items-center gap-3">
+			<span
+				class="grid size-9 place-items-center rounded-xl bg-ink text-base font-semibold text-cream md:size-10"
+			>
+				{name.charAt(0)}
+			</span>
+			<span class="flex flex-col leading-tight">
+				<span class="text-sm font-semibold md:text-base">{name}</span>
+				<span class="text-[0.7rem] text-slate/70">{subtitle}</span>
+			</span>
+		</a>
+
+		<!-- الروابط (تظهر في الشاشات الكبيرة فقط) + زر اللغة -->
+		<div class="flex items-center gap-8">
+			<ul class="hidden items-center gap-7 md:flex">
+				{
+					links.map((link) => (
+						<li>
+							<a href={link.href} class="text-sm transition-colors hover:text-teal">
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<a
+				href={switchHref}
+				lang={isAr ? 'en' : 'ar'}
+				class="grid size-9 place-items-center rounded-full border border-ink/70 text-xs font-semibold md:size-10 transition-colors hover:bg-ink hover:text-cream"
+			>
+				{switchLabel}
+			</a>
+		</div>
+	</nav>
+</header>
