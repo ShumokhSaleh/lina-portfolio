@@ -15,6 +15,7 @@ export default defineConfig({
     sanity({
       projectId: '8t1sl8zv',
       dataset: 'production',
-      useCdn: true,
+      // false: نجيب أحدث نسخة وقت البناء (الموقع ثابت، فما نحتاج سرعة الـ CDN)
+      useCdn: false,
     })
   ]});

@@ -6,10 +6,10 @@ const isAr = lang === 'ar';
 
 const name = pick(about, 'name', lang) || (isAr ? 'لينا العالي' : 'Lina Al-Aali');
 const tagline = pick(about, 'tagline', lang);
-const tags = about.tags ?? [];
+const tags = about[`tags_${lang}`] ?? [];
 const nameWords = name.split(' ');
 
-const ctaLabel = isAr ? 'استكشفي الأعمال' : 'Explore the Works';
+const ctaLabel = isAr ? 'تصفّح الأعمال' : 'Explore the Works';
 
 // نطلب نسخة مصغّرة من الصورة من Sanity عشان تحمل بسرعة
 const portrait = about.portraitUrl ? `${about.portraitUrl}?w=900&auto=format` : null;
@@ -75,8 +75,8 @@ const portrait = about.portraitUrl ? `${about.portraitUrl}?w=900&auto=format` : 
 		</div>
 
 		<!-- الصورة داخل قوس -->
-		<div class="flex justify-center md:justify-end">
-			<div class="relative w-[68%] max-w-xs lg:max-w-sm">
+		<div class="flex justify-center">
+			<div class="relative w-[68%] max-w-xs">
 				<!-- الخط الذهبي خلف الصورة -->
 				<div
 					aria-hidden="true"

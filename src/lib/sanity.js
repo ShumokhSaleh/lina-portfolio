@@ -5,14 +5,15 @@ export async function getAbout() {
   const query = `*[_type == "about" && _id == "about"][0]{
     name_ar, name_en,
     tagline_ar, tagline_en,
-    tags,
+    tags_ar, tags_en,
     instagram,
     "portraitUrl": portrait.asset->url
   }`;
   return (await sanityClient.fetch(query)) ?? {};
 }
 
-// ترجع النص باللغة المطلوبة، وإذا الإنجليزي فاضي ترجع العربي
+// ترجع النص باللغة المطلوبة فقط (ما نخلط العربي في الصفحة الإنجليزية)
+// إذا الحقل فاضي ترجع '' — والمكوّن يقرر يخفيه أو يحط نص احتياطي
 export function pick(doc, field, lang) {
-  return doc?.[`${field}_${lang}`] || doc?.[`${field}_ar`] || '';
+  return doc?.[`${field}_${lang}`] || '';
 }
