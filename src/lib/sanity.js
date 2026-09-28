@@ -17,3 +17,11 @@ export async function getAbout() {
 export function pick(doc, field, lang) {
   return doc?.[`${field}_${lang}`] || '';
 }
+
+// نجيب الإحصائيات (ثلاث أرقام مع نص تحت كل رقم)
+export async function getStats() {
+  const query = `*[_type == "stats" && _id == "stats"][0].items[]{
+    number, plus, label_ar, label_en
+  }`;
+  return (await sanityClient.fetch(query)) ?? [];
+}
