@@ -2,17 +2,22 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Hero from '../../components/Hero.astro';
+import Divider from '../../components/Divider.astro';
 import Stats from '../../components/Stats.astro';
-import { getAbout, getStats } from '../../lib/sanity.js';
+import Exhibitions from '../../components/Exhibitions.astro';
+import { getAbout, getStats, getExhibitions } from '../../lib/sanity.js';
 
 const about = await getAbout();
 const stats = await getStats();
+const exhibitions = await getExhibitions();
 ---
 
 <Layout lang="en" title={about.name_en || 'Lina Al-Aali'}>
 	<Navbar lang="en" about={about} />
 	<main>
 		<Hero lang="en" about={about} />
+		<Divider />
 		<Stats lang="en" stats={stats} />
+		<Exhibitions lang="en" exhibitions={exhibitions} />
 	</main>
 </Layout>

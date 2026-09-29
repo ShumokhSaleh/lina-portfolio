@@ -25,3 +25,16 @@ export async function getStats() {
   }`;
   return (await sanityClient.fetch(query)) ?? [];
 }
+
+// نجيب المعارض: الأحدث أولًا، واللي ما لها تاريخ تطلع آخر شي (نفس ترتيب الاستوديو)
+export async function getExhibitions() {
+  const query = `*[_type == "exhibition"] | order(defined(startDate) desc, startDate desc){
+    _id,
+    title_ar, title_en,
+    description_ar, description_en,
+    startDate, endDate,
+    venue_ar, venue_en,
+    link
+  }`;
+  return (await sanityClient.fetch(query)) ?? [];
+}
