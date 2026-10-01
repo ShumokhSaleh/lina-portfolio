@@ -55,3 +55,13 @@ export async function getSelectedWorks() {
   }`;
   return (await sanityClient.fetch(query)) ?? {};
 }
+
+// نجيب قسم "عن الفنانة": الاقتباس والنبذة والتكريم (اختياري)
+export async function getAboutArtist() {
+  const query = `*[_type == "aboutArtist" && _id == "aboutArtist"][0]{
+    quote_ar, quote_en,
+    bio_ar, bio_en,
+    award{ year, title_ar, title_en }
+  }`;
+  return (await sanityClient.fetch(query)) ?? {};
+}
