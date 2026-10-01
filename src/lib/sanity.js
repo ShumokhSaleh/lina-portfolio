@@ -39,7 +39,7 @@ export async function getExhibitions() {
   return (await sanityClient.fetch(query)) ?? [];
 }
 
-// نجيب قسم "أعمال مختارة": العنوان والنص التعريفي والأعمال (ثلاثة بالكثير)
+// نجيب قسم "أعمال مختارة": العنوان والنص التعريفي والأعمال (ستة بالكثير)
 // رابط الصورة نطلبه بعرض مناسب وبصيغة خفيفة (webp) عشان الصفحة ما تثقل
 export async function getSelectedWorks() {
   const query = `*[_type == "selectedWorks" && _id == "selectedWorks"][0]{
