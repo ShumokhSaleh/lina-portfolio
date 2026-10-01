@@ -38,3 +38,20 @@ export async function getExhibitions() {
   }`;
   return (await sanityClient.fetch(query)) ?? [];
 }
+
+// نجيب قسم "أعمال مختارة": العنوان والنص التعريفي والأعمال (ثلاثة بالكثير)
+// رابط الصورة نطلبه بعرض مناسب وبصيغة خفيفة (webp) عشان الصفحة ما تثقل
+export async function getSelectedWorks() {
+  const query = `*[_type == "selectedWorks" && _id == "selectedWorks"][0]{
+    heading_ar, heading_en,
+    intro_ar, intro_en,
+    "works": works[defined(image.asset)]{
+      _key,
+      title_ar, title_en,
+      detail_ar, detail_en,
+      "imageUrl": image.asset->url + "?w=1200&fit=max&auto=format",
+      "alt_ar": image.alt_ar, "alt_en": image.alt_en
+    }
+  }`;
+  return (await sanityClient.fetch(query)) ?? {};
+}

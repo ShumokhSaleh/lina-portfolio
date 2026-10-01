@@ -5,11 +5,13 @@ import Hero from '../../components/Hero.astro';
 import Divider from '../../components/Divider.astro';
 import Stats from '../../components/Stats.astro';
 import Exhibitions from '../../components/Exhibitions.astro';
-import { getAbout, getStats, getExhibitions } from '../../lib/sanity.js';
+import SelectedWorks from '../../components/SelectedWorks.astro';
+import { getAbout, getStats, getExhibitions, getSelectedWorks } from '../../lib/sanity.js';
 
 const about = await getAbout();
 const stats = await getStats();
 const exhibitions = await getExhibitions();
+const selectedWorks = await getSelectedWorks();
 ---
 
 <Layout lang="en" title={about.name_en || 'Lina Al-Aali'}>
@@ -19,5 +21,6 @@ const exhibitions = await getExhibitions();
 		<Divider />
 		<Stats lang="en" stats={stats} />
 		<Exhibitions lang="en" exhibitions={exhibitions} />
+		<SelectedWorks lang="en" selectedWorks={selectedWorks} />
 	</main>
 </Layout>
