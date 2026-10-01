@@ -8,6 +8,7 @@ import Exhibitions from '../../components/Exhibitions.astro';
 import SelectedWorks from '../../components/SelectedWorks.astro';
 import About from '../../components/About.astro';
 import Milestones from '../../components/Milestones.astro';
+import Contact from '../../components/Contact.astro';
 import { getAbout, getStats, getExhibitions, getSelectedWorks, getAboutArtist, getMilestones } from '../../lib/sanity.js';
 
 const about = await getAbout();
@@ -28,5 +29,6 @@ const milestones = await getMilestones();
 		<SelectedWorks lang="en" selectedWorks={selectedWorks} />
 		<About lang="en" aboutArtist={aboutArtist} />
 		<Milestones lang="en" milestones={milestones} />
+		<Contact lang="en" />
 	</main>
 </Layout>
