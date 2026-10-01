@@ -7,7 +7,8 @@ export async function getAbout() {
     tagline_ar, tagline_en,
     tags_ar, tags_en,
     instagram,
-    "portraitUrl": portrait.asset->url
+    "portraitUrl": portrait.asset->url,
+    "portraitHotspot": portrait.hotspot{ x, y }
   }`;
   return (await sanityClient.fetch(query)) ?? {};
 }
