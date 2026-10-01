@@ -13,6 +13,13 @@ const ctaLabel = isAr ? 'تصفّح الأعمال' : 'Explore the Works';
 
 // نطلب نسخة مصغّرة من الصورة من Sanity عشان تحمل بسرعة
 const portrait = about.portraitUrl ? `${about.portraitUrl}?w=900&auto=format` : null;
+
+// مكان الصورة داخل القوس: إذا الصورة أطول من القوس لازم ينقص منها جزء
+// لو لينا حددت "النقطة المهمة" (Hotspot) في الاستوديو نخليها هي الظاهرة
+// وإذا ما حددت، نثبت الصورة من فوق عشان الراس ما ينقص (والنقص يصير من تحت)
+const hotspot = about.portraitHotspot;
+const portraitPosition =
+	hotspot?.x != null && hotspot?.y != null ? `${Math.round(hotspot.x * 100)}% ${Math.round(hotspot.y * 100)}%` : 'center top';
 ---
 
 <section class="relative overflow-hidden">
@@ -89,7 +96,13 @@ const portrait = about.portraitUrl ? `${about.portraitUrl}?w=900&auto=format` : 
 				>
 					{
 						portrait ? (
-							<img src={portrait} alt={name} class="size-full object-cover" fetchpriority="high" />
+							<img
+								src={portrait}
+								alt={name}
+								class="size-full object-cover"
+								style={`object-position: ${portraitPosition}`}
+								fetchpriority="high"
+							/>
 						) : (
 							<svg
 								viewBox="0 0 200 250"
