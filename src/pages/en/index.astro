@@ -22,7 +22,7 @@ const contact = await getContact();
 const importantLinks = await getImportantLinks();
 ---
 
-<Layout lang="en" title={about.name_en || 'Lina Al-Aali'}>
+<Layout lang="en" title={`${about.name_en || 'Lina Al-Aali'} | Visual Artist`}>
 	<Navbar lang="en" about={about} />
 	<main>
 		<Hero lang="en" about={about} />
