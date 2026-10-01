@@ -38,7 +38,7 @@ const items = (milestones.items ?? []).filter((item) => pick(item, 'title', lang
 								</span>
 								<div>
 									<h3 class="text-sm font-semibold text-ink md:text-base">{pick(item, 'title', lang)}</h3>
-									{description && <p class="mt-1 text-xs leading-relaxed text-slate md:text-sm">{description}</p>}
+									{description && <p class="mt-1 text-xs leading-relaxed whitespace-pre-line text-slate md:text-sm">{description}</p>}
 								</div>
 							</li>
 						);

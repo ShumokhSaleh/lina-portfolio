@@ -35,7 +35,7 @@ const showAward = award?.year && awardTitle;
 					<p class="mb-4 text-xs font-medium tracking-wider text-teal md:text-sm">{label}</p>
 					{quote && (
 						<>
-							<blockquote class="max-w-md text-2xl leading-snug font-medium text-ink md:text-4xl">{quote}</blockquote>
+							<blockquote class="max-w-md whitespace-pre-line text-2xl leading-snug font-medium text-ink md:text-4xl">{quote}</blockquote>
 							<div aria-hidden="true" class="mt-6 h-px w-16 bg-gold md:mt-8 md:w-24"></div>
 						</>
 					)}
@@ -44,7 +44,7 @@ const showAward = award?.year && awardTitle;
 				<!-- النبذة -->
 				<div class="md:col-span-7">
 					{bio.length > 0 && (
-						<div class="space-y-4 text-sm leading-loose text-slate md:text-base">
+						<div class="space-y-4 text-sm leading-loose whitespace-pre-line text-slate md:text-base">
 							{bio.map((paragraph) => <p>{paragraph}</p>)}
 						</div>
 					)}
