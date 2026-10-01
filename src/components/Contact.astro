@@ -1,5 +1,5 @@
 ---
-const { lang = 'ar' } = Astro.props;
+const { lang = 'ar', contact = {} } = Astro.props;
 const isAr = lang === 'ar';
 
 // نصوص القسم مكتوبة هنا في الكود (مو من الاستوديو) — للتعديل غيّري النص في اللغتين
@@ -17,11 +17,11 @@ const content = {
 };
 const t = content[isAr ? 'ar' : 'en'];
 
-// حساب الإنستغرام
-const instagram = {
-	url: 'https://www.instagram.com/linaalaali',
-	handle: '@linaalaali',
-};
+// الإنستغرام والإيميل تكتبهم لينا من الاستوديو
+// من رابط الإنستغرام ناخذ اسم المستخدم بس، ونسوي منه رابط نظيف (بدون أكواد التتبّع مثل ?stkn=)
+const username = contact.instagram?.match(/instagram\.com\/([^/?#]+)/i)?.[1];
+const instagram = username ? { url: `https://www.instagram.com/${username}`, handle: `@${username}` } : null;
+const email = contact.email;
 ---
 
 <!-- الخلفية: عنابي، وفيه إضاءة خفيفة فوق (مثل التصميم) -->
@@ -35,14 +35,31 @@ const instagram = {
 		<h2 class="max-w-2xl text-4xl leading-tight font-medium md:text-6xl">{t.heading}</h2>
 		<p class="mt-5 max-w-xl text-sm leading-loose text-white/75 md:mt-6 md:text-base">{t.text}</p>
 
-		<!-- زر الإنستغرام: الحساب يُكتب من اليسار لليمين عشان تطلع @ في مكانها الصح -->
-		<a
-			href={instagram.url}
-			target="_blank"
-			rel="noopener"
-			class="mt-8 inline-flex items-center gap-2 bg-cream px-6 py-3 text-sm font-semibold text-wine transition-opacity hover:opacity-90 md:mt-10"
-		>
-			<span dir="ltr">{instagram.handle} ↗</span>
-		</a>
+		{
+			(instagram || email) && (
+				<div class="mt-8 flex flex-wrap items-center gap-4 md:mt-10">
+					<!-- زر الإنستغرام: الحساب يُكتب من اليسار لليمين عشان تطلع @ في مكانها الصح -->
+					{instagram && (
+						<a
+							href={instagram.url}
+							target="_blank"
+							rel="noopener"
+							class="inline-flex items-center bg-cream px-6 py-3 text-sm font-semibold text-wine transition-opacity hover:opacity-90"
+						>
+							<span dir="ltr">{instagram.handle} ↗</span>
+						</a>
+					)}
+					<!-- زر الإيميل (اختياري): بإطار فاتح بدل الخلفية عشان الإنستغرام يبقى هو الأساسي -->
+					{email && (
+						<a
+							href={`mailto:${email}`}
+							class="inline-flex items-center border border-cream/70 px-6 py-3 text-sm font-semibold text-cream transition-colors hover:bg-cream hover:text-wine"
+						>
+							<span dir="ltr">{email}</span>
+						</a>
+					)}
+				</div>
+			)
+		}
 	</div>
 </section>
