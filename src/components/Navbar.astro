@@ -23,22 +23,15 @@ const links = isAr
 
 // زر تبديل اللغة يودّي للصفحة الثانية
 const switchHref = isAr ? '/en/' : '/';
-const switchLabel = isAr ? 'EN' : 'ع';
+const switchLabel = isAr ? 'English' : 'العربية';
 ---
 
 <header class="relative z-20 border-b border-line">
 	<nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-10 md:py-4">
-		<!-- الشعار والاسم -->
-		<a href={isAr ? '/' : '/en/'} class="flex items-center gap-3">
-			<span
-				class="grid size-9 place-items-center rounded-xl bg-ink text-base font-semibold text-cream md:size-10"
-			>
-				{name.charAt(0)}
-			</span>
-			<span class="flex flex-col leading-tight">
-				<span class="text-sm font-semibold md:text-base">{name}</span>
-				<span class="text-[0.7rem] text-slate/70">{subtitle}</span>
-			</span>
+		<!-- الاسم -->
+		<a href={isAr ? '/' : '/en/'} class="flex flex-col leading-tight">
+			<span class="text-sm font-semibold md:text-base">{name}</span>
+			<span class="text-[0.7rem] text-slate/70">{subtitle}</span>
 		</a>
 
 		<!-- الروابط (تظهر في الشاشات الكبيرة فقط) + زر اللغة -->
@@ -57,9 +50,27 @@ const switchLabel = isAr ? 'EN' : 'ع';
 			<a
 				href={switchHref}
 				lang={isAr ? 'en' : 'ar'}
-				class="grid size-9 place-items-center rounded-full border border-ink/70 text-xs font-semibold md:size-10 transition-colors hover:bg-ink hover:text-cream"
+				aria-label={switchLabel}
+				title={switchLabel}
+				class="grid size-9 place-items-center rounded-full border border-ink/70 md:size-10 transition-colors hover:bg-ink hover:text-cream"
 			>
-				{switchLabel}
+				<!-- أيقونة الكرة الأرضية -->
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.4"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="size-[1.15rem] md:size-5"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="9" />
+					<path d="M3 12h18" />
+					<path d="M12 3a14 14 0 0 1 0 18" />
+					<path d="M12 3a14 14 0 0 0 0 18" />
+				</svg>
 			</a>
 		</div>
 	</nav>

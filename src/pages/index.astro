@@ -22,7 +22,7 @@ const contact = await getContact();
 const importantLinks = await getImportantLinks();
 ---
 
-<Layout lang="ar" title={about.name_ar || 'لينا العالي'}>
+<Layout lang="ar" title={`${(about.name_ar || 'لينا العالي').replace(/ـ/g, '')} | فنانة تشكيلية`}>
 	<Navbar lang="ar" about={about} />
 	<main>
 		<Hero lang="ar" about={about} />
