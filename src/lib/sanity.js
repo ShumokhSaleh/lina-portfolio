@@ -80,3 +80,12 @@ export async function getMilestones() {
   }`;
   return (await sanityClient.fetch(query)) ?? {};
 }
+
+// نجيب بيانات "تواصل": رابط الإنستغرام والبريد الإلكتروني (اختياري)
+export async function getContact() {
+  const query = `*[_type == "contact" && _id == "contact"][0]{
+    instagram,
+    email
+  }`;
+  return (await sanityClient.fetch(query)) ?? {};
+}

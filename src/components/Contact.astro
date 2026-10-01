@@ -1,0 +1,65 @@
+---
+const { lang = 'ar', contact = {} } = Astro.props;
+const isAr = lang === 'ar';
+
+// نصوص القسم مكتوبة هنا في الكود (مو من الاستوديو) — للتعديل غيّري النص في اللغتين
+const content = {
+	ar: {
+		label: 'للتعاون',
+		heading: 'لنصنع أثرًا يبقى.',
+		text: 'للمعارض، الإقامات الفنية، الفن العام، الورش والمشاريع الثقافية.',
+	},
+	en: {
+		label: 'Collaborate',
+		heading: "Let's create a lasting impact.",
+		text: 'For exhibitions, artist residencies, public art, workshops and cultural projects.',
+	},
+};
+const t = content[isAr ? 'ar' : 'en'];
+
+// الإنستغرام والإيميل تكتبهم لينا من الاستوديو
+// من رابط الإنستغرام ناخذ اسم المستخدم بس، ونسوي منه رابط نظيف (بدون أكواد التتبّع مثل ?stkn=)
+const username = contact.instagram?.match(/instagram\.com\/([^/?#]+)/i)?.[1];
+const instagram = username ? { url: `https://www.instagram.com/${username}`, handle: `@${username}` } : null;
+const email = contact.email;
+---
+
+<!-- الخلفية: عنابي، وفيه إضاءة خفيفة فوق (مثل التصميم) -->
+<section
+	id="contact"
+	aria-label={t.label}
+	class="bg-wine bg-[radial-gradient(circle_at_75%_25%,rgba(255,255,255,0.12),transparent_45%)] text-white"
+>
+	<div class="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-24">
+		<p class="mb-4 text-xs font-medium tracking-wider text-gold md:text-sm">{t.label}</p>
+		<h2 class="max-w-2xl text-4xl leading-tight font-medium md:text-6xl">{t.heading}</h2>
+		<p class="mt-5 max-w-xl text-sm leading-loose text-white/75 md:mt-6 md:text-base">{t.text}</p>
+
+		{
+			(instagram || email) && (
+				<div class="mt-8 flex flex-wrap items-center gap-4 md:mt-10">
+					<!-- زر الإنستغرام: الحساب يُكتب من اليسار لليمين عشان تطلع @ في مكانها الصح -->
+					{instagram && (
+						<a
+							href={instagram.url}
+							target="_blank"
+							rel="noopener"
+							class="inline-flex items-center bg-cream px-6 py-3 text-sm font-semibold text-wine transition-opacity hover:opacity-90"
+						>
+							<span dir="ltr">{instagram.handle} ↗</span>
+						</a>
+					)}
+					<!-- زر الإيميل (اختياري): بإطار فاتح بدل الخلفية عشان الإنستغرام يبقى هو الأساسي -->
+					{email && (
+						<a
+							href={`mailto:${email}`}
+							class="inline-flex items-center border border-cream/70 px-6 py-3 text-sm font-semibold text-cream transition-colors hover:bg-cream hover:text-wine"
+						>
+							<span dir="ltr">{email}</span>
+						</a>
+					)}
+				</div>
+			)
+		}
+	</div>
+</section>
