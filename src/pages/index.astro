@@ -7,13 +7,15 @@ import Stats from '../components/Stats.astro';
 import Exhibitions from '../components/Exhibitions.astro';
 import SelectedWorks from '../components/SelectedWorks.astro';
 import About from '../components/About.astro';
-import { getAbout, getStats, getExhibitions, getSelectedWorks, getAboutArtist } from '../lib/sanity.js';
+import Milestones from '../components/Milestones.astro';
+import { getAbout, getStats, getExhibitions, getSelectedWorks, getAboutArtist, getMilestones } from '../lib/sanity.js';
 
 const about = await getAbout();
 const stats = await getStats();
 const exhibitions = await getExhibitions();
 const selectedWorks = await getSelectedWorks();
 const aboutArtist = await getAboutArtist();
+const milestones = await getMilestones();
 ---
 
 <Layout lang="ar" title={about.name_ar || 'لينا العالي'}>
@@ -25,5 +27,6 @@ const aboutArtist = await getAboutArtist();
 		<Exhibitions lang="ar" exhibitions={exhibitions} />
 		<SelectedWorks lang="ar" selectedWorks={selectedWorks} />
 		<About lang="ar" aboutArtist={aboutArtist} />
+		<Milestones lang="ar" milestones={milestones} />
 	</main>
 </Layout>

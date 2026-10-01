@@ -1,0 +1,50 @@
+---
+import { pick } from '../lib/sanity.js';
+import Divider from './Divider.astro';
+
+const { lang = 'ar', milestones = {} } = Astro.props;
+const isAr = lang === 'ar';
+
+// الكلمة الصغيرة فوق العنوان ثابتة في الكود (العنوان والمحطات تكتبهم لينا من الاستوديو)
+const label = isAr ? 'محطات مختارة' : 'Selected Milestones';
+const heading = pick(milestones, 'heading', lang);
+
+// نخفي المحطات اللي ما لها عنوان باللغة الحالية (ما نخلط العربي في الصفحة الإنجليزية)
+// ونعرض عشرين بالكثير (نفس حد الاستوديو). الترتيب من الأحدث للأقدم جاي جاهز من Sanity
+const items = (milestones.items ?? []).filter((item) => pick(item, 'title', lang)).slice(0, 20);
+---
+
+{
+	items.length > 0 && (
+		<>
+			<!-- الخط الذهبي الفاصل داخل القسم عشان ينخفي معه لو القسم فاضي -->
+			<Divider />
+			<!-- القسم أضيق من باقي الأقسام (max-w-5xl) عشان يكون فيه فراغ أكبر يمين ويسار -->
+			<section id="journey" aria-label={label} class="mx-auto max-w-5xl px-5 py-10 md:px-10 md:py-16">
+				<header class="mb-8 md:mb-12">
+					<p class="mb-4 text-xs font-medium tracking-wider text-teal md:text-sm">{label}</p>
+					{heading && <h2 class="max-w-md text-3xl leading-tight font-medium text-ink md:text-5xl">{heading}</h2>}
+				</header>
+
+				<!-- القائمة: خط غامق فوقها، وخطوط رفيعة بين المحطات -->
+				<!-- كل محطة: السنة في جهة، والعنوان والنبذة جنبها -->
+				<ol class="divide-y divide-line border-t border-ink border-b border-b-line">
+					{items.map((item) => {
+						const description = pick(item, 'description', lang);
+						return (
+							<li class="grid grid-cols-[4.5rem_1fr] items-baseline gap-4 py-5 md:grid-cols-[7rem_1fr] md:gap-8 md:py-6">
+								<span class="font-en text-2xl leading-none font-medium text-wine lining-nums md:text-3xl">
+									{item.year}
+								</span>
+								<div>
+									<h3 class="text-sm font-semibold text-ink md:text-base">{pick(item, 'title', lang)}</h3>
+									{description && <p class="mt-1 text-xs leading-relaxed whitespace-pre-line text-slate md:text-sm">{description}</p>}
+								</div>
+							</li>
+						);
+					})}
+				</ol>
+			</section>
+		</>
+	)
+}

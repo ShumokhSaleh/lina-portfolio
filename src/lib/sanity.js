@@ -65,3 +65,17 @@ export async function getAboutArtist() {
   }`;
   return (await sanityClient.fetch(query)) ?? {};
 }
+
+// نجيب قسم "محطات مختارة": العنوان والمحطات، مرتبة من الأحدث للأقدم حسب السنة
+export async function getMilestones() {
+  const query = `*[_type == "milestones" && _id == "milestones"][0]{
+    heading_ar, heading_en,
+    "items": items[defined(year)] | order(year desc){
+      _key,
+      year,
+      title_ar, title_en,
+      description_ar, description_en
+    }
+  }`;
+  return (await sanityClient.fetch(query)) ?? {};
+}
