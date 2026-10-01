@@ -1,0 +1,49 @@
+---
+import { pick } from '../lib/sanity.js';
+
+const { lang = 'ar', links = [] } = Astro.props;
+const isAr = lang === 'ar';
+
+// عنوان "روابط مهمة" والحقوق ثابتين في الكود (الروابط نفسها تكتبها لينا من الاستوديو)
+const linksLabel = isAr ? 'روابط مهمة' : 'Important Links';
+const name = isAr ? 'لينا العالي' : 'Lina Al-Aali';
+const rights = isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.';
+// السنة تتحدث تلقائيًا مع كل بناء للموقع
+const year = new Date().getFullYear();
+
+// نخفي الروابط اللي ما لها عنوان باللغة الحالية (ما نخلط العربي في الصفحة الإنجليزية)
+// ونعرض خمسة بالكثير (نفس حد الاستوديو)
+const items = links.filter((link) => pick(link, 'title', lang)).slice(0, 5);
+---
+
+<footer class="bg-[#0a2535] text-cream">
+	<div class="mx-auto max-w-7xl px-5 py-10 md:px-10 md:py-12">
+		<!-- الروابط المهمة: تنخفي كلها لو ما فيه روابط -->
+		{
+			items.length > 0 && (
+				<nav aria-label={linksLabel} class="mb-8 md:mb-10">
+					<p class="mb-4 text-xs font-medium tracking-wider text-gold md:text-sm">{linksLabel}</p>
+					<ul class="flex flex-col gap-3 md:flex-row md:flex-wrap md:gap-x-10">
+						{items.map((link) => (
+							<li>
+								<a
+									href={link.url}
+									target="_blank"
+									rel="noopener"
+									class="text-sm text-cream/80 transition-colors hover:text-gold md:text-base"
+								>
+									{pick(link, 'title', lang)} ↗
+								</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			)
+		}
+
+		<!-- الحقوق: تحت خط رفيع (الخط يظهر بس لو فوقه روابط) -->
+		<p class:list={['text-xs text-cream/60 md:text-sm', items.length > 0 && 'border-t border-cream/15 pt-6']}>
+			© <span class="font-en lining-nums">{year}</span> {name}. {rights}
+		</p>
+	</div>
+</footer>
