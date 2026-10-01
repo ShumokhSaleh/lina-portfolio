@@ -89,3 +89,13 @@ export async function getContact() {
   }`;
   return (await sanityClient.fetch(query)) ?? {};
 }
+
+// نجيب "روابط مهمة" للفوتر (خمس بالكثير، بنفس ترتيب الاستوديو)
+export async function getImportantLinks() {
+  const query = `*[_type == "importantLinks" && _id == "importantLinks"][0].links[defined(url)]{
+    _key,
+    title_ar, title_en,
+    url
+  }`;
+  return (await sanityClient.fetch(query)) ?? [];
+}
