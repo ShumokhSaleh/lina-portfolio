@@ -51,6 +51,8 @@ export async function getSelectedWorks() {
       title_ar, title_en,
       detail_ar, detail_en,
       "imageUrl": image.asset->url + "?w=1200&fit=max&auto=format",
+      // نسخة أكبر للعرض بحجم كامل (lightbox) لما الزائر يضغط على الصورة
+      "fullUrl": image.asset->url + "?w=2560&fit=max&auto=format",
       "alt_ar": image.alt_ar, "alt_en": image.alt_en
     }
   }`;
