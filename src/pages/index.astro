@@ -10,7 +10,7 @@ import About from '../components/About.astro';
 import Milestones from '../components/Milestones.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
-import { getAbout, getStats, getExhibitions, getSelectedWorks, getAboutArtist, getMilestones, getContact, getImportantLinks } from '../lib/sanity.js';
+import { getAbout, getStats, getExhibitions, getSelectedWorks, getAboutArtist, getMilestones, getContact, getImportantLinks, ogImageUrl } from '../lib/sanity.js';
 
 const about = await getAbout();
 const stats = await getStats();
@@ -22,7 +22,7 @@ const contact = await getContact();
 const importantLinks = await getImportantLinks();
 ---
 
-<Layout lang="ar" title={`${(about.name_ar || 'لينا العالي').replace(/ـ/g, '')} | فنانة تشكيلية`}>
+<Layout lang="ar" title={`${(about.name_ar || 'لينا العالي').replace(/ـ/g, '')} | فنانة تشكيلية`} description={about.tagline_ar} image={ogImageUrl(about)}>
 	<Navbar lang="ar" about={about} />
 	<main>
 		<Hero lang="ar" about={about} />
