@@ -51,6 +51,8 @@ export async function getSelectedWorks() {
       title_ar, title_en,
       detail_ar, detail_en,
       "imageUrl": image.asset->url + "?w=1200&fit=max&auto=format",
+      // نسخة أكبر للعرض بحجم كامل (lightbox) لما الزائر يضغط على الصورة
+      "fullUrl": image.asset->url + "?w=2560&fit=max&auto=format",
       "alt_ar": image.alt_ar, "alt_en": image.alt_en
     }
   }`;
@@ -98,4 +100,13 @@ export async function getImportantLinks() {
     url
   }`;
   return (await sanityClient.fetch(query)) ?? [];
+}
+
+// رابط صورة المشاركة (OG image) اللي تطلع لما أحد يرسل رابط الموقع بالواتساب
+// نستخدم صورة لينا اللي بالقسم الأول (الهيرو) بالمقاس المعتمد للمشاركة (1200×630)
+// الصورة طولية، فما نقصها (عشان الوجه ما ينقص): نحطها كاملة في النص والجوانب بلون خلفية الموقع
+// الصيغة jpg لأن بعض التطبيقات ما تعرض webp في المعاينة
+export function ogImageUrl(about) {
+  if (!about?.portraitUrl) return null;
+  return `${about.portraitUrl}?w=1200&h=630&fit=fill&bg=f4f1ea&fm=jpg&q=85`;
 }
