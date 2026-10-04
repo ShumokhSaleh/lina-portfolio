@@ -57,6 +57,8 @@ function cardSpan(i) {
 					// الرقم 01، 02 … من ترتيب العمل في القائمة
 					const number = String(i + 1).padStart(2, '0');
 
+					const alt = pick(work, 'alt', lang) || title;
+
 					// كل البطاقات بنفس الطول، والصورة تكبر لين تعبي وسط البطاقة كاملة بدون قص
 					return (
 						<li class:list={['relative flex h-72 flex-col overflow-hidden p-4 md:h-80 md:p-6', colors[i % colors.length], cardSpan(i)]}>
@@ -70,15 +72,22 @@ function cardSpan(i) {
 								{number}
 							</span>
 
-							<div class="relative min-h-0 flex-1 py-3">
+							<!-- الصورة زر: الضغط عليها يفتحها بحجم كامل (lightbox) -->
+							<button
+								type="button"
+								class="lightbox-trigger relative min-h-0 flex-1 cursor-zoom-in py-3"
+								data-full={work.fullUrl}
+								data-alt={alt}
+								aria-label={isAr ? `عرض «${title}» بحجم كامل` : `View “${title}” full size`}
+							>
 								<img
 									src={work.imageUrl}
-									alt={pick(work, 'alt', lang) || title}
+									alt={alt}
 									loading="lazy"
 									decoding="async"
-									class="h-full w-full object-contain drop-shadow-xl"
+									class="h-full w-full object-contain drop-shadow-xl transition-transform duration-300 hover:scale-[1.02]"
 								/>
-							</div>
+							</button>
 
 							<!-- خط أبيض، وتحته اسم العمل في جهة والمعلومة الإضافية في الجهة الثانية -->
 							<div class="relative flex items-end justify-between gap-4 border-t border-current pt-3">
@@ -89,6 +98,64 @@ function cardSpan(i) {
 					);
 				})}
 			</ol>
+
+			<!-- نافذة العرض بحجم كامل: خلفية غامقة والصورة في النص -->
+			<!-- تتسكر بزر ✕ أو بالضغط على الخلفية أو بزر Esc، والأسهم تنقل بين الأعمال -->
+			<dialog
+				id="lightbox"
+				aria-label={isAr ? 'عرض العمل بحجم كامل' : 'Artwork full view'}
+				class="m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-black/90"
+			>
+				<div class="flex h-full w-full items-center justify-center p-4 md:p-10">
+					<img id="lightbox-img" src="" alt="" class="max-h-full max-w-full object-contain shadow-2xl" />
+				</div>
+				<button
+					type="button"
+					id="lightbox-close"
+					class="absolute top-4 end-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/25"
+					aria-label={isAr ? 'إغلاق' : 'Close'}
+				>✕</button>
+			</dialog>
 		</section>
 	)
 }
+
+<script>
+	const dialog = document.getElementById('lightbox');
+	const img = document.getElementById('lightbox-img');
+	const triggers = [...document.querySelectorAll('.lightbox-trigger')];
+	let current = 0;
+
+	function show(i) {
+		current = (i + triggers.length) % triggers.length;
+		img.src = triggers[current].dataset.full;
+		img.alt = triggers[current].dataset.alt;
+	}
+
+	if (dialog) {
+		triggers.forEach((btn, i) =>
+			btn.addEventListener('click', () => {
+				show(i);
+				dialog.showModal();
+			}),
+		);
+
+		document.getElementById('lightbox-close').addEventListener('click', () => dialog.close());
+
+		// الضغط على أي مكان غير الصورة يسكّر النافذة
+		dialog.addEventListener('click', (e) => {
+			if (e.target !== img) dialog.close();
+		});
+
+		// الأسهم: ننتقل للعمل اللي بعده أو قبله (Esc يسكّر تلقائيًا)
+		// في العربي الاتجاه معكوس: السهم اليسار = التالي
+		dialog.addEventListener('keydown', (e) => {
+			const rtl = document.documentElement.dir === 'rtl';
+			if (e.key === 'ArrowRight') show(current + (rtl ? -1 : 1));
+			if (e.key === 'ArrowLeft') show(current + (rtl ? 1 : -1));
+		});
+
+		// نفضي الصورة بعد الإغلاق عشان ما تطلع الصورة القديمة لحظة الفتح الجاي
+		dialog.addEventListener('close', () => img.removeAttribute('src'));
+	}
+</script>
