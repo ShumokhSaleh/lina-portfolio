@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 
-const { lang = 'ar', title = 'لينا العالي', description = '', image = null } = Astro.props;
+const { lang = 'ar', title = 'لينا العالي', siteName = '', description = '', image = null } = Astro.props;
 const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 
@@ -23,6 +23,7 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
 		<!-- معاينة الرابط لما ينرسل بالواتساب وغيره: العنوان والوصف والصورة -->
 		<meta property="og:type" content="website" />
+		{siteName && <meta property="og:site_name" content={siteName} />}
 		<meta property="og:title" content={title} />
 		{description && <meta property="og:description" content={description} />}
 		<meta property="og:locale" content={lang === 'ar' ? 'ar_AR' : 'en_US'} />

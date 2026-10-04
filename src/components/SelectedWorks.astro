@@ -100,13 +100,14 @@ function cardSpan(i) {
 			</ol>
 
 			<!-- نافذة العرض بحجم كامل: خلفية غامقة والصورة في النص -->
-			<!-- تتسكر بزر ✕ أو بالضغط على الخلفية أو بزر Esc، والأسهم تنقل بين الأعمال -->
+			<!-- تتسكر بزر ✕ أو بالضغط على الخلفية أو بزر Esc -->
+			<!-- التنقل بين الأعمال: زرين على الجوانب، أو أسهم الكيبورد، أو السحب بالإصبع في الجوال -->
 			<dialog
 				id="lightbox"
 				aria-label={isAr ? 'عرض العمل بحجم كامل' : 'Artwork full view'}
 				class="m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-black/90"
 			>
-				<div class="flex h-full w-full items-center justify-center p-4 md:p-10">
+				<div id="lightbox-stage" class="flex h-full w-full items-center justify-center px-4 py-16 md:p-16">
 					<img id="lightbox-img" src="" alt="" class="max-h-full max-w-full object-contain shadow-2xl" />
 				</div>
 				<button
@@ -115,6 +116,29 @@ function cardSpan(i) {
 					class="absolute top-4 end-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/25"
 					aria-label={isAr ? 'إغلاق' : 'Close'}
 				>✕</button>
+
+				<!-- زر السابق في بداية السطر وزر التالي في نهايته (في العربي ينعكسون تلقائيًا) -->
+				<!-- السهم يلف بالعربي عشان يأشر للجهة الصح -->
+				{works.length > 1 && (
+					<>
+						<button
+							type="button"
+							id="lightbox-prev"
+							class="absolute start-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/25 md:start-4"
+							aria-label={isAr ? 'العمل السابق' : 'Previous artwork'}
+						>
+							<svg viewBox="0 0 24 24" class="size-6 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+						</button>
+						<button
+							type="button"
+							id="lightbox-next"
+							class="absolute end-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/25 md:end-4"
+							aria-label={isAr ? 'العمل التالي' : 'Next artwork'}
+						>
+							<svg viewBox="0 0 24 24" class="size-6 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+						</button>
+					</>
+				)}
 			</dialog>
 		</section>
 	)
@@ -122,40 +146,80 @@ function cardSpan(i) {
 
 <script>
 	const dialog = document.getElementById('lightbox');
+	const stage = document.getElementById('lightbox-stage');
 	const img = document.getElementById('lightbox-img');
 	const triggers = [...document.querySelectorAll('.lightbox-trigger')];
+	const rtl = document.documentElement.dir === 'rtl';
 	let current = 0;
 
+	// نعرض الصورة الصغيرة (المحمّلة من قبل في البطاقة) على طول عشان الشاشة ما تبقى فاضية
+	// ونحمّل الكبيرة بالخلفية، وأول ما تجهز نبدّلها
 	function show(i) {
 		current = (i + triggers.length) % triggers.length;
-		img.src = triggers[current].dataset.full;
-		img.alt = triggers[current].dataset.alt;
+		const trigger = triggers[current];
+		const thumb = trigger.querySelector('img');
+		img.src = thumb.currentSrc || thumb.src;
+		img.alt = trigger.dataset.alt;
+
+		const full = new Image();
+		const index = current;
+		full.onload = () => {
+			// نتأكد إن الزائر ما انتقل لعمل ثاني قبل لا تخلص الصورة
+			if (index === current && dialog.open) img.src = full.src;
+		};
+		full.src = trigger.dataset.full;
 	}
+
+	const next = () => show(current + 1);
+	const prev = () => show(current - 1);
 
 	if (dialog) {
 		triggers.forEach((btn, i) =>
 			btn.addEventListener('click', () => {
 				show(i);
 				dialog.showModal();
+				// نوقف حركة الصفحة اللي ورا النافذة
+				document.documentElement.classList.add('overflow-hidden');
 			}),
 		);
 
 		document.getElementById('lightbox-close').addEventListener('click', () => dialog.close());
+		document.getElementById('lightbox-next')?.addEventListener('click', next);
+		document.getElementById('lightbox-prev')?.addEventListener('click', prev);
 
-		// الضغط على أي مكان غير الصورة يسكّر النافذة
+		// الضغط على الخلفية (مو على الصورة أو الأزرار) يسكّر النافذة
 		dialog.addEventListener('click', (e) => {
-			if (e.target !== img) dialog.close();
+			if (e.target === dialog || e.target === stage) dialog.close();
 		});
 
 		// الأسهم: ننتقل للعمل اللي بعده أو قبله (Esc يسكّر تلقائيًا)
 		// في العربي الاتجاه معكوس: السهم اليسار = التالي
 		dialog.addEventListener('keydown', (e) => {
-			const rtl = document.documentElement.dir === 'rtl';
-			if (e.key === 'ArrowRight') show(current + (rtl ? -1 : 1));
-			if (e.key === 'ArrowLeft') show(current + (rtl ? 1 : -1));
+			if (e.key === 'ArrowRight') rtl ? prev() : next();
+			if (e.key === 'ArrowLeft') rtl ? next() : prev();
 		});
 
-		// نفضي الصورة بعد الإغلاق عشان ما تطلع الصورة القديمة لحظة الفتح الجاي
-		dialog.addEventListener('close', () => img.removeAttribute('src'));
+		// السحب بالإصبع في الجوال: نفس منطق الأسهم
+		// لازم تكون الحركة أفقية وأطول من 50 بكسل عشان ما نخلطها مع اللمسة العادية
+		let startX = 0;
+		let startY = 0;
+		dialog.addEventListener('touchstart', (e) => {
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+		}, { passive: true });
+		dialog.addEventListener('touchend', (e) => {
+			if (triggers.length < 2) return;
+			const dx = e.changedTouches[0].clientX - startX;
+			const dy = e.changedTouches[0].clientY - startY;
+			if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+			const swipedLeft = dx < 0;
+			swipedLeft === rtl ? prev() : next();
+		});
+
+		// بعد الإغلاق: نرجّع حركة الصفحة، ونفضي الصورة عشان ما تطلع القديمة لحظة الفتح الجاي
+		dialog.addEventListener('close', () => {
+			document.documentElement.classList.remove('overflow-hidden');
+			img.removeAttribute('src');
+		});
 	}
 </script>

@@ -20,9 +20,12 @@ const aboutArtist = await getAboutArtist();
 const milestones = await getMilestones();
 const contact = await getContact();
 const importantLinks = await getImportantLinks();
+
+// اسم الفنانة للعنوان ومعاينة الرابط (نشيل التطويل "ـ" والمسافات الزايدة)
+const name = (about.name_ar || 'لينا العالي').replace(/ـ/g, '').trim();
 ---
 
-<Layout lang="ar" title={`${(about.name_ar || 'لينا العالي').replace(/ـ/g, '')} | فنانة تشكيلية`} description={about.tagline_ar} image={ogImageUrl(about)}>
+<Layout lang="ar" title={`${name} | فنانة تشكيلية`} siteName={name} description={about.tagline_ar} image={ogImageUrl(about)}>
 	<Navbar lang="ar" about={about} />
 	<main>
 		<Hero lang="ar" about={about} />
