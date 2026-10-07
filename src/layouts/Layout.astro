@@ -10,8 +10,12 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!-- بدون صورة في التاب: أيقونة فاضية عشان المتصفح ما يدوّر على favicon.ico -->
-		<link rel="icon" href="data:," />
+		<!-- شعار الموقع في التاب -->
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<!-- نسخة PNG للمتصفحات اللي ما تدعم SVG (مثل Safari) -->
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+		<!-- أيقونة الآيفون لما ينحفظ الموقع على الشاشة الرئيسية -->
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
